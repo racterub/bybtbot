@@ -7,6 +7,7 @@ from config import TOKEN
 from aiogram import Bot, Dispatcher, types, executor
 from json import loads
 from time import time
+from math import floor, log10
 import httpx
 import websockets
 import zlib
@@ -21,12 +22,12 @@ dp = Dispatcher(bot)
 Utility functions
 """
 def process_digit(data):
+    bases = ['',' K',' M',' B',' T']
     values = []
     for i in data:
-        if (1000000000 > i["openInterest"] > 1000000):
-            values.append(f"{round(i['openInterest']/1000000, 3)}M")
-        elif (1000000000000 > i["openInterest"] > 1000000000):
-            values.append(f"{round(i['openInterest']/1000000000, 3)}B")
+        n = float(i["openInterest"])
+        base = max(0, min(len(bases)-1, int(floor(0 if n == 0 else log10(abs(n))/3))))
+        values.append(f"{round(n / 10**(3 * base), 3)}{bases[base]}")
     return values
 
 async def getlatestoi():
@@ -226,7 +227,7 @@ https://github.com/racterub/bybtbot
     - @racterub (PM me :p)
 
 - Version
-v1.0.0"""
+v1.0.1"""
     await bot.delete_message(message.chat.id, message.message_id)
     await bot.send_message(message.chat.id, resp)
 
