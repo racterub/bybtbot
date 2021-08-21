@@ -159,14 +159,14 @@ BTC:
     Huobi: {btc["Huobi"][0]}% / {btc["Huobi"][1]}% - {round(btc["Huobi"][0]/btc["Huobi"][1], 3)}
     Binance: {btc["Binance"][0]}% / {btc["Binance"][1]} - {round(btc["Binance"][0]/btc["Binance"][1], 3)}
     Okex: {btc["Okex"][0]}% / {btc["Okex"][1]}% - {round(btc["Okex"][0]/btc["Okex"][1], 3)}
-    FTX: {btc["FTX"][0]}% / {btc["Okex"][1]}% - {round(btc["FTX"][0]/btc["FTX"][1], 3)}
+    FTX: {btc["FTX"][0]}% / {btc["FTX"][1]}% - {round(btc["FTX"][0]/btc["FTX"][1], 3)}
     Bybit: {btc["Bybit"][0]}% / {btc["Bybit"][1]}% - {round(btc["Bybit"][0]/btc["Bybit"][1], 3)}
     全網： {btc["All"][0]}% / {btc["All"][1]}% - {round(btc["All"][0]/btc["All"][1], 3)}
 ETH:
     Huobi: {eth["Huobi"][0]}% / {eth["Huobi"][1]}% - {round(eth["Huobi"][0]/eth["Huobi"][1], 3)}
     Binance: {eth["Binance"][0]}% / {eth["Binance"][1]}% - {round(eth["Binance"][0]/eth["Binance"][1], 3)}
     Okex: {eth["Okex"][0]}% / {eth["Okex"][1]}% - {round(eth["Okex"][0]/eth["Okex"][1], 3)}
-    FTX: {eth["FTX"][0]}% / {eth["Okex"][1]}% - {round(eth["FTX"][0]/eth["FTX"][1], 3)}
+    FTX: {eth["FTX"][0]}% / {eth["FTX"][1]}% - {round(eth["FTX"][0]/eth["FTX"][1], 3)}
     Bybit: {eth["Bybit"][0]}% / {eth["Bybit"][1]}% - {round(eth["Bybit"][0]/eth["Bybit"][1], 3)}
     全網： {eth["All"][0]}% / {eth["All"][1]}% - {round(eth["All"][0]/eth["All"][1], 3)}
 ---
