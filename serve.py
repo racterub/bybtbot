@@ -92,17 +92,17 @@ async def fundingfee_command(message: types.Message):
     resp = f"""BYBT 資金費率:
 ```
 BTC:
-    Huobi:   {process_dot(str(btc["Huobi"]))}
-    Binance: {process_dot(str(btc["Binance"]))}
-    Okex:    {process_dot(str(btc["Okex"]))}
-    FTX:     {process_dot(str(btc["FTX"]))}
-    Bybit:   {process_dot(str(btc["Bybit"]))}
+    Huobi:   {process_dot(str(round(btc["Huobi"], 3)))}
+    Binance: {process_dot(str(round(btc["Binance"], 3)))}
+    Okex:    {process_dot(str(round(btc["Okex"], 3)))}
+    FTX:     {process_dot(str(round(btc["FTX"], 3)))}
+    Bybit:   {process_dot(str(round(btc["Bybit"], 3)))}
 ETH:
-    Huobi:   {process_dot(str(eth["Huobi"]))}
-    Binance: {process_dot(str(eth["Binance"]))}
-    Okex:    {process_dot(str(eth["Okex"]))}
-    FTX:     {process_dot(str(eth["FTX"]))}
-    Bybit:   {process_dot(str(eth["Bybit"]))}
+    Huobi:   {process_dot(str(round(eth["Huobi"], 3)))}
+    Binance: {process_dot(str(round(eth["Binance"], 3)))}
+    Okex:    {process_dot(str(round(eth["Okex"], 3)))}
+    FTX:     {process_dot(str(round(eth["FTX"], 3)))}
+    Bybit:   {process_dot(str(round(eth["Bybit"], 3)))}
 ```"""
     await bot.delete_message(message.chat.id, message.message_id)
     await bot.send_message(message.chat.id, resp, parse_mode="MarkdownV2")
@@ -160,19 +160,19 @@ ETH:
 
 (交易所多空比)
 BTC:
-    Huobi:   {process_dot(str(btc["Huobi"][0])):<6}% / {process_dot(str(btc["Huobi"][1])):<6}% \- {process_dot(str(round(btc["Huobi"][0]/btc["Huobi"][1], 3)))}
-    Binance: {process_dot(str(btc["Binance"][0])):<6}% / {process_dot(str(btc["Binance"][1])):<6} \- {process_dot(str(round(btc["Binance"][0]/btc["Binance"][1], 3)))}
-    Okex:    {process_dot(str(btc["Okex"][0])):<6}% / {process_dot(str(btc["Okex"][1])):<6}% \- {process_dot(str(round(btc["Okex"][0]/btc["Okex"][1], 3)))}
-    FTX:     {process_dot(str(btc["FTX"][0])):<6}% / {process_dot(str(btc["FTX"][1])):<6}% \- {process_dot(str(round(btc["FTX"][0]/btc["FTX"][1], 3)))}
-    Bybit:   {process_dot(str(btc["Bybit"][0])):<6}% / {process_dot(str(btc["Bybit"][1])):<6}% \- {process_dot(str(round(btc["Bybit"][0]/btc["Bybit"][1], 3)))}
-    全網：    {process_dot(str(btc["All"][0])):<6}% / {process_dot(str(btc["All"][1])):<6}% \- {process_dot(str(round(btc["All"][0]/btc["All"][1], 3)))}
+    Huobi:   {process_dot(str(round(btc["Huobi"][0]/btc["Huobi"][1], 3)))}
+    Binance: {process_dot(str(round(btc["Binance"][0]/btc["Binance"][1], 3)))}
+    Okex:    {process_dot(str(round(btc["Okex"][0]/btc["Okex"][1], 3)))}
+    FTX:     {process_dot(str(round(btc["FTX"][0]/btc["FTX"][1], 3)))}
+    Bybit:   {process_dot(str(round(btc["Bybit"][0]/btc["Bybit"][1], 3)))}
+    全網：    {process_dot(str(round(btc["All"][0]/btc["All"][1], 3)))}
 ETH:
-    Huobi:   {process_dot(str(eth["Huobi"][0])):<6}% / {process_dot(str(eth["Huobi"][1])):<6}% \- {process_dot(str(round(eth["Huobi"][0]/eth["Huobi"][1], 3)))}
-    Binance: {process_dot(str(eth["Binance"][0])):<6}% / {process_dot(str(eth["Binance"][1])):<6}% \- {process_dot(str(round(eth["Binance"][0]/eth["Binance"][1], 3)))}
-    Okex:    {process_dot(str(eth["Okex"][0])):<6}% / {process_dot(str(eth["Okex"][1])):<6}% \- {process_dot(str(round(eth["Okex"][0]/eth["Okex"][1], 3)))}
-    FTX:     {process_dot(str(eth["FTX"][0])):<6}% / {process_dot(str(eth["Okex"][1])):<6}% \- {process_dot(str(round(eth["FTX"][0]/eth["FTX"][1], 3)))}
-    Bybit:   {process_dot(str(eth["Bybit"][0])):<6}% / {process_dot(str(eth["Bybit"][1])):<6}% \- {process_dot(str(round(eth["Bybit"][0]/eth["Bybit"][1], 3)))}
-    全網：    {process_dot(str(eth["All"][0])):<6}% / {process_dot(str(eth["All"][1])):<6}% \- {process_dot(str(round(eth["All"][0]/eth["All"][1], 3)))}
+    Huobi:   {process_dot(str(round(eth["Huobi"][0]/eth["Huobi"][1], 3)))}
+    Binance: {process_dot(str(round(eth["Binance"][0]/eth["Binance"][1], 3)))}
+    Okex:    {process_dot(str(round(eth["Okex"][0]/eth["Okex"][1], 3)))}
+    FTX:     {process_dot(str(round(eth["FTX"][0]/eth["FTX"][1], 3)))}
+    Bybit:   {process_dot(str(round(eth["Bybit"][0]/eth["Bybit"][1], 3)))}
+    全網：    {process_dot(str(round(eth["All"][0]/eth["All"][1], 3)))}
 ---
 Binance k線圖 近四小時多空比(LSUR)
 BTC: {process_dot(str(btc_kline[0]["longShortRatio"]))} \- {process_dot(str(btc_kline[1]["longShortRatio"]))} \- {process_dot(str(btc_kline[2]["longShortRatio"]))} \- {process_dot(str(binance_btc))}
