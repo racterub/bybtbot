@@ -30,6 +30,9 @@ def process_digit(data):
         values.append(f"{round(n / 10**(3 * base), 3)}{bases[base]}")
     return values
 
+def process_dot(data):
+    return data.replace(".","\.")
+
 async def getlatestoi():
     uri = "wss://ws.bybt.com:666/ws"
     async with websockets.connect(uri) as websocket:
@@ -87,22 +90,22 @@ async def fundingfee_command(message: types.Message):
     btc = {i["exchangeName"]:i["rate"] for i in resource[0]["uMarginList"]}
     eth = {i["exchangeName"]:i["rate"] for i in resource[1]["uMarginList"]}
     resp = f"""BYBT 資金費率:
+```
 BTC:
-    Huobi: {btc["Huobi"]}
-    Binance: {btc["Binance"]}
-    Okex: {btc["Okex"]}
-    FTX: {btc["FTX"]}
-    Bybit: {btc["Bybit"]}
+    Huobi:   {process_dot(str(btc["Huobi"]))}
+    Binance: {process_dot(str(btc["Binance"]))}
+    Okex:    {process_dot(str(btc["Okex"]))}
+    FTX:     {process_dot(str(btc["FTX"]))}
+    Bybit:   {process_dot(str(btc["Bybit"]))}
 ETH:
-    Huobi: {eth["Huobi"]}
-    Binance: {eth["Binance"]}
-    Okex: {eth["Okex"]}
-    FTX: {eth["FTX"]}
-    Bybit: {eth["Bybit"]}
-
-資料來源: https://www.bybt.com/zh-tw/FundingRate"""
+    Huobi:   {process_dot(str(eth["Huobi"]))}
+    Binance: {process_dot(str(eth["Binance"]))}
+    Okex:    {process_dot(str(eth["Okex"]))}
+    FTX:     {process_dot(str(eth["FTX"]))}
+    Bybit:   {process_dot(str(eth["Bybit"]))}
+```"""
     await bot.delete_message(message.chat.id, message.message_id)
-    await bot.send_message(message.chat.id, resp)
+    await bot.send_message(message.chat.id, resp, parse_mode="MarkdownV2")
 
 
 @dp.message_handler(commands=["openinterest"])
@@ -117,15 +120,15 @@ async def openinterest(message: types.Message):
     btc_oi_data = process_digit(btc_resource[-5:-1])
     eth_oi_data = process_digit(eth_resource[-5:-1])
     btc, eth = await getlatestoi()
-    resp = f"""BYBT 持倉數據(近4小時)
+    resp = f"""BYBT 持倉數據 \(近4小時\)
+```
 BTC:
-    {btc_oi_data[0]} - {btc_oi_data[1]} - {btc_oi_data[2]} - {btc}
+    {process_dot(str(btc_oi_data[0]))} \- {process_dot(str(btc_oi_data[1]))} \- {process_dot(str(btc_oi_data[2]))} - {process_dot(str(btc))}
 ETH:
-    {eth_oi_data[0]} - {eth_oi_data[1]} - {eth_oi_data[2]} - {eth}
-
-資料來源: https://www.bybt.com/"""
+    {process_dot(str(eth_oi_data[0]))} \- {process_dot(str(eth_oi_data[1]))} \- {process_dot(str(eth_oi_data[2]))} - {process_dot(str(eth))}
+```"""
     await bot.delete_message(message.chat.id, message.message_id)
-    await bot.send_message(message.chat.id, resp)
+    await bot.send_message(message.chat.id, resp, parse_mode="MarkdownV2")
 
 @dp.message_handler(commands=["longshortratio"])
 async def longshortratio_command(message: types.Message):
@@ -147,36 +150,36 @@ async def longshortratio_command(message: types.Message):
     btc["All"] = [btc_resource["longRate"], btc_resource["shortRate"]]
     eth = {i["exchangeName"]:[i["longRate"], i["shortRate"]] for i in eth_resource["list"]}
     eth["All"] = [eth_resource["longRate"], eth_resource["shortRate"]]
-    resp = f"""BYBT 多空比 (1小時距):
+    resp = f"""BYBT 多空比 \(1小時距\):
+```
 (近4小時多空比)
 BTC:
-    {btc_chart["longShortRateList"][-4]} - {btc_chart["longShortRateList"][-3]} - {btc_chart["longShortRateList"][-2]} - {btc_chart["longShortRateList"][-1]}
+    {process_dot(str(btc_chart["longShortRateList"][-4]))} \- {process_dot(str(btc_chart["longShortRateList"][-3]))} \- {process_dot(str(btc_chart["longShortRateList"][-2]))} \- {process_dot(str(btc_chart["longShortRateList"][-1]))}
 ETH:
-    {eth_chart["longShortRateList"][-4]} - {eth_chart["longShortRateList"][-3]} - {eth_chart["longShortRateList"][-2]} - {eth_chart["longShortRateList"][-1]}
----
+    {process_dot(str(eth_chart["longShortRateList"][-4]))} \- {process_dot(str(eth_chart["longShortRateList"][-3]))} \- {process_dot(str(eth_chart["longShortRateList"][-2]))} \- {process_dot(str(eth_chart["longShortRateList"][-1]))}
+
 (交易所多空比)
 BTC:
-    Huobi: {btc["Huobi"][0]}% / {btc["Huobi"][1]}% - {round(btc["Huobi"][0]/btc["Huobi"][1], 3)}
-    Binance: {btc["Binance"][0]}% / {btc["Binance"][1]} - {round(btc["Binance"][0]/btc["Binance"][1], 3)}
-    Okex: {btc["Okex"][0]}% / {btc["Okex"][1]}% - {round(btc["Okex"][0]/btc["Okex"][1], 3)}
-    FTX: {btc["FTX"][0]}% / {btc["FTX"][1]}% - {round(btc["FTX"][0]/btc["FTX"][1], 3)}
-    Bybit: {btc["Bybit"][0]}% / {btc["Bybit"][1]}% - {round(btc["Bybit"][0]/btc["Bybit"][1], 3)}
-    全網： {btc["All"][0]}% / {btc["All"][1]}% - {round(btc["All"][0]/btc["All"][1], 3)}
+    Huobi:   {process_dot(str(btc["Huobi"][0])):<6}% / {process_dot(str(btc["Huobi"][1])):<6}% \- {process_dot(str(round(btc["Huobi"][0]/btc["Huobi"][1], 3)))}
+    Binance: {process_dot(str(btc["Binance"][0])):<6}% / {process_dot(str(btc["Binance"][1])):<6} \- {process_dot(str(round(btc["Binance"][0]/btc["Binance"][1], 3)))}
+    Okex:    {process_dot(str(btc["Okex"][0])):<6}% / {process_dot(str(btc["Okex"][1])):<6}% \- {process_dot(str(round(btc["Okex"][0]/btc["Okex"][1], 3)))}
+    FTX:     {process_dot(str(btc["FTX"][0])):<6}% / {process_dot(str(btc["FTX"][1])):<6}% \- {process_dot(str(round(btc["FTX"][0]/btc["FTX"][1], 3)))}
+    Bybit:   {process_dot(str(btc["Bybit"][0])):<6}% / {process_dot(str(btc["Bybit"][1])):<6}% \- {process_dot(str(round(btc["Bybit"][0]/btc["Bybit"][1], 3)))}
+    全網：    {process_dot(str(btc["All"][0])):<6}% / {process_dot(str(btc["All"][1])):<6}% \- {process_dot(str(round(btc["All"][0]/btc["All"][1], 3)))}
 ETH:
-    Huobi: {eth["Huobi"][0]}% / {eth["Huobi"][1]}% - {round(eth["Huobi"][0]/eth["Huobi"][1], 3)}
-    Binance: {eth["Binance"][0]}% / {eth["Binance"][1]}% - {round(eth["Binance"][0]/eth["Binance"][1], 3)}
-    Okex: {eth["Okex"][0]}% / {eth["Okex"][1]}% - {round(eth["Okex"][0]/eth["Okex"][1], 3)}
-    FTX: {eth["FTX"][0]}% / {eth["FTX"][1]}% - {round(eth["FTX"][0]/eth["FTX"][1], 3)}
-    Bybit: {eth["Bybit"][0]}% / {eth["Bybit"][1]}% - {round(eth["Bybit"][0]/eth["Bybit"][1], 3)}
-    全網： {eth["All"][0]}% / {eth["All"][1]}% - {round(eth["All"][0]/eth["All"][1], 3)}
+    Huobi:   {process_dot(str(eth["Huobi"][0])):<6}% / {process_dot(str(eth["Huobi"][1])):<6}% \- {process_dot(str(round(eth["Huobi"][0]/eth["Huobi"][1], 3)))}
+    Binance: {process_dot(str(eth["Binance"][0])):<6}% / {process_dot(str(eth["Binance"][1])):<6}% \- {process_dot(str(round(eth["Binance"][0]/eth["Binance"][1], 3)))}
+    Okex:    {process_dot(str(eth["Okex"][0])):<6}% / {process_dot(str(eth["Okex"][1])):<6}% \- {process_dot(str(round(eth["Okex"][0]/eth["Okex"][1], 3)))}
+    FTX:     {process_dot(str(eth["FTX"][0])):<6}% / {process_dot(str(eth["Okex"][1])):<6}% \- {process_dot(str(round(eth["FTX"][0]/eth["FTX"][1], 3)))}
+    Bybit:   {process_dot(str(eth["Bybit"][0])):<6}% / {process_dot(str(eth["Bybit"][1])):<6}% \- {process_dot(str(round(eth["Bybit"][0]/eth["Bybit"][1], 3)))}
+    全網：    {process_dot(str(eth["All"][0])):<6}% / {process_dot(str(eth["All"][1])):<6}% \- {process_dot(str(round(eth["All"][0]/eth["All"][1], 3)))}
 ---
 Binance k線圖 近四小時多空比(LSUR)
-BTC: {btc_kline[0]["longShortRatio"]} - {btc_kline[1]["longShortRatio"]} - {btc_kline[2]["longShortRatio"]} - {binance_btc}
-ETH: {eth_kline[0]["longShortRatio"]} - {eth_kline[1]["longShortRatio"]} - {eth_kline[2]["longShortRatio"]} - {binance_eth}
-
-資料來源: https://www.bybt.com/zh-tw/LongShortRatio"""
+BTC: {process_dot(str(btc_kline[0]["longShortRatio"]))} \- {process_dot(str(btc_kline[1]["longShortRatio"]))} \- {process_dot(str(btc_kline[2]["longShortRatio"]))} \- {process_dot(str(binance_btc))}
+ETH: {process_dot(str(eth_kline[0]["longShortRatio"]))} \- {process_dot(str(eth_kline[1]["longShortRatio"]))} \- {process_dot(str(eth_kline[2]["longShortRatio"]))} \- {process_dot(str(binance_eth))}
+```"""
     await bot.delete_message(message.chat.id, message.message_id)
-    await bot.send_message(message.chat.id, resp)
+    await bot.send_message(message.chat.id, resp, parse_mode="MarkdownV2")
 
 
 
@@ -187,15 +190,15 @@ async def uptrendrank_command(message: types.Message):
     resource = res.json()["data"]
     rank = [[i["symbol"], {"change": i["h24PriceChangePercent"], "price": i["price"] }] for i in sorted(resource, key=lambda x:x["h24PriceChangePercent"], reverse=True)[:5]]
     resp = f"""BYBT 漲幅榜:
-1. {rank[0][0]} - 24h漲幅: {rank[0][1]["change"]}%, 現價: {rank[0][1]["price"]}
-2. {rank[1][0]} - 24h漲幅: {rank[1][1]["change"]}%, 現價: {rank[1][1]["price"]}
-3. {rank[2][0]} - 24h漲幅: {rank[2][1]["change"]}%, 現價: {rank[2][1]["price"]}
-4. {rank[3][0]} - 24h漲幅: {rank[3][1]["change"]}%, 現價: {rank[3][1]["price"]}
-5. {rank[4][0]} - 24h漲幅: {rank[4][1]["change"]}%, 現價: {rank[4][1]["price"]}
-
-資料來源: https://www.bybt.com/zh-tw/gainers-losers"""
+```
+1\. {rank[0][0]:<6} 24h漲幅: {process_dot(str(rank[0][1]["change"])):<6}%, 現價: {process_dot(str(rank[0][1]["price"]))}
+2\. {rank[1][0]:<6} 24h漲幅: {process_dot(str(rank[1][1]["change"])):<6}%, 現價: {process_dot(str(rank[1][1]["price"]))}
+3\. {rank[2][0]:<6} 24h漲幅: {process_dot(str(rank[2][1]["change"])):<6}%, 現價: {process_dot(str(rank[2][1]["price"]))}
+4\. {rank[3][0]:<6} 24h漲幅: {process_dot(str(rank[3][1]["change"])):<6}%, 現價: {process_dot(str(rank[3][1]["price"]))}
+5\. {rank[4][0]:<6} 24h漲幅: {process_dot(str(rank[4][1]["change"])):<6}%, 現價: {process_dot(str(rank[4][1]["price"]))}
+```"""
     await bot.delete_message(message.chat.id, message.message_id)
-    await bot.send_message(message.chat.id, resp)
+    await bot.send_message(message.chat.id, resp, parse_mode="MarkdownV2")
 
 @dp.message_handler(commands=["downtrendrank"])
 async def downtrendrank_command(message: types.Message):
@@ -203,16 +206,16 @@ async def downtrendrank_command(message: types.Message):
         res = await client.get('https://fapi.bybt.com/api/futures/coins/priceChange')
     resource = res.json()["data"]
     rank = [[i["symbol"], {"change": i["h24PriceChangePercent"], "price": i["price"] }] for i in sorted(resource, key=lambda x:x["h24PriceChangePercent"])[:5]]
-    resp = f"""BYBT 漲幅榜:
-1. {rank[0][0]} - 24h漲幅: {rank[0][1]["change"]}%, 現價: {rank[0][1]["price"]}
-2. {rank[1][0]} - 24h漲幅: {rank[1][1]["change"]}%, 現價: {rank[1][1]["price"]}
-3. {rank[2][0]} - 24h漲幅: {rank[2][1]["change"]}%, 現價: {rank[2][1]["price"]}
-4. {rank[3][0]} - 24h漲幅: {rank[3][1]["change"]}%, 現價: {rank[3][1]["price"]}
-5. {rank[4][0]} - 24h漲幅: {rank[4][1]["change"]}%, 現價: {rank[4][1]["price"]}
-
-資料來源: https://www.bybt.com/zh-tw/gainers-losers"""
+    resp = f"""BYBT 跌幅榜:
+```
+1\. {rank[0][0]:<6} 24h跌幅: {process_dot(str(rank[0][1]["change"])):<6}%, 現價: {process_dot(str(rank[0][1]["price"]))}
+2\. {rank[1][0]:<6} 24h跌幅: {process_dot(str(rank[1][1]["change"])):<6}%, 現價: {process_dot(str(rank[1][1]["price"]))}
+3\. {rank[2][0]:<6} 24h跌幅: {process_dot(str(rank[2][1]["change"])):<6}%, 現價: {process_dot(str(rank[2][1]["price"]))}
+4\. {rank[3][0]:<6} 24h跌幅: {process_dot(str(rank[3][1]["change"])):<6}%, 現價: {process_dot(str(rank[3][1]["price"]))}
+5\. {rank[4][0]:<6} 24h跌幅: {process_dot(str(rank[4][1]["change"])):<6}%, 現價: {process_dot(str(rank[4][1]["price"]))}
+```"""
     await bot.delete_message(message.chat.id, message.message_id)
-    await bot.send_message(message.chat.id, resp)
+    await bot.send_message(message.chat.id, resp, parse_mode="MarkdownV2")
 
 @dp.message_handler(commands=["about"])
 async def about_command(message: types.Message):
@@ -227,7 +230,7 @@ https://github.com/racterub/bybtbot
     - @racterub (PM me :p)
 
 - Version
-v1.0.2"""
+v1.0.3"""
     await bot.delete_message(message.chat.id, message.message_id)
     await bot.send_message(message.chat.id, resp)
 
