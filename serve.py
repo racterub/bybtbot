@@ -230,7 +230,7 @@ https://github.com/racterub/bybtbot
     - @racterub (PM me :p)
 
 - Version
-v1.0.3"""
+v1.0.4"""
     await bot.delete_message(message.chat.id, message.message_id)
     await bot.send_message(message.chat.id, resp)
 
